@@ -18,7 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString)); // Change to UseOracle(connectionString) if using Oracle
 
 // Register repositories and services
-builder.Services.AddSingleton<ICandidateApplicationRepository, CandidateApplicationRepository>();
+builder.Services.AddScoped<ICandidateApplicationRepository, CandidateApplicationRepository>();
 builder.Services.AddSingleton<PdfService>();
 builder.Services.AddSingleton<EmailService>();
 

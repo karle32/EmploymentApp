@@ -11,6 +11,8 @@ namespace ISMIEEmploymentApp.Services
         public byte[] GenerateApplicationPdf(Candidate application)
         {
             QuestPDF.Settings.License = LicenseType.Community;
+            var primaryAddress = application.Addresses.FirstOrDefault();
+            var secondaryAddress = application.Addresses.Skip(1).FirstOrDefault();
 
             return Document.Create(container =>
             {
@@ -28,12 +30,15 @@ namespace ISMIEEmploymentApp.Services
                         col.Item().Text($"Alternative Name: {application.AltName ?? "N/A"}");
 
                         col.Item().Text("Primary Address:");
-                        col.Item().Text($"{application.Address}, {application.City}, {application.StateProvince}, {application.ZipPostalCode}");
-                        col.Item().Text($"Phone: {application.Phone} | Lived At: {application.LivedAtAddress} years");
+                        col.Item().Text(primaryAddress != null
+                            ? $"{primaryAddress.Address}, {primaryAddress.City}, {primaryAddress.StateProvince}, {primaryAddress.ZipPostalCode}"
+                            : "N/A");
+                        col.Item().Text($"Phone: {application.Phone} | Lived At: {primaryAddress?.LivedAtAddress ?? 0} years");
 
                         col.Item().Text("Secondary Address:");
-                        col.Item().Text($"{application.Address2 ?? "N/A"}, {application.City2 ?? "N/A"}, {application.StateProvince2 ?? "N/A"}, {application.ZipPostalCode2 ?? "N/A"}");
-                        col.Item().Text($"Phone: {application.Phone ?? "N/A"} | Lived At: {application.LivedAtAddress2 ?? 0} years");
+                        col.Item().Text(secondaryAddress != null
+                            ? $"{secondaryAddress.Address}, {secondaryAddress.City}, {secondaryAddress.StateProvince}, {secondaryAddress.ZipPostalCode}"
+                            : "N/A");
 
                         col.Item().Text($"Legal Age: {(application.LegalAge ? "Yes" : "No")}");
                         col.Item().Text($"Date Available: {application.DataAvailable:yyyy-MM-dd}");

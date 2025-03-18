@@ -31,12 +31,12 @@ namespace ISMIEEmploymentApp.Repository
 
         public async Task<IEnumerable<Candidate>> GetAllAsync()
         {
-            return await _ctx.Candidates.ToListAsync();
+            return await _ctx.Candidates.Include(c => c.Addresses).ToListAsync();
         }
 
         public async Task<Candidate?> GetByIdAsync(int id)
         {
-            return await _ctx.Candidates.FindAsync(id);
+            return await _ctx.Candidates.Include(c => c.Addresses).FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task UpdateAsync(Candidate candidate)

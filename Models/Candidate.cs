@@ -17,22 +17,7 @@ namespace ISMIEEmploymentApp.Models
         [Required, MaxLength(100)]
         public string LastName { get; set; } = string.Empty;
 
-        public string AltName { get; set; } = string.Empty;
-
-        [Required, MaxLength(255)]
-        public string Address { get; set; } = string.Empty;
-
-        [Required, MaxLength(100)]
-        public string City { get; set; } = string.Empty;
-
-        [Required, MaxLength(100)]
-        public string StateProvince { get; set; } = string.Empty;
-
-        [Required, MaxLength(20)]
-        public string ZipPostalCode { get; set; } = string.Empty;
-
-        [Required, MaxLength(100)]
-        public string Country { get; set; } = string.Empty;
+        public string AltName { get; set; } = string.Empty;        
 
         [Required, MaxLength(20)]
         public string Phone { get; set; } = string.Empty;
@@ -51,5 +36,8 @@ namespace ISMIEEmploymentApp.Models
         public bool AuthorizedToWork { get; set; }
         public bool SponsorshipNeeded { get; set; }
         public string? HearAboutUs { get; set; }
+
+        // Relationships
+        public List<CandidateAddress> Addresses { get; set; } = new();
     }
 }
