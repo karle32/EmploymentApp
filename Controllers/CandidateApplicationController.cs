@@ -38,7 +38,7 @@ namespace ISMIEEmploymentApp.Controllers
             try
             {
                 // Save application to mock database
-                _repository.Add(application);
+                await _repository.AddAsync(application);
 
                 // Generate PDF
                 var pdfBytes = _pdfService.GenerateApplicationPdf(application);
@@ -63,10 +63,79 @@ namespace ISMIEEmploymentApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetApplications()
+        public async Task<IActionResult> GetAllApplications()
         {
-            var applications = _repository.GetAll();
-            return Ok(applications);
+            try
+            {
+                var applications = await _repository.GetAllAsync();
+                return Ok(applications);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving applications.");
+                return Problem("An error occurred while fetching applications.", statusCode: 500);
+            }
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetApplicationById(int id)
+        {
+            try
+            {
+                var candidate = await _repository.GetByIdAsync(id);
+                if (candidate == null)
+                    return NotFound($"Candidate with ID {id} not found.");
+
+                return Ok(candidate);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving candidate with ID {Id}", id);
+                return Problem("An error occurred while fetching the candidate.", statusCode: 500);
+            }
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateApplication(int id, [FromBody] Candidate updatedCandidate)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var existingCandidate = await _repository.GetByIdAsync(id);
+                if (existingCandidate == null)
+                    return NotFound($"Candidate with ID {id} not found.");
+
+                updatedCandidate.Id = id;  // Ensure correct ID
+                await _repository.UpdateAsync(updatedCandidate);
+
+                return Ok(new { message = "Candidate updated successfully!" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating candidate with ID {Id}", id);
+                return Problem("An error occurred while updating the candidate.", statusCode: 500);
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteApplication(int id)
+        {
+            try
+            {
+                var existingCandidate = await _repository.GetByIdAsync(id);
+                if (existingCandidate == null)
+                    return NotFound($"Candidate with ID {id} not found.");
+
+                await _repository.DeleteAsync(id);
+                return Ok(new { message = "Candidate deleted successfully!" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting candidate with ID {Id}", id);
+                return Problem("An error occurred while deleting the candidate.", statusCode: 500);
+            }
         }
     }
 }

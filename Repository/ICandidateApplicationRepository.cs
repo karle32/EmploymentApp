@@ -4,7 +4,10 @@ namespace ISMIEEmploymentApp.Repository
 {
     public interface ICandidateApplicationRepository
     {
-        void Add(Candidate application);
-        IEnumerable<Candidate> GetAll();
+        Task<IEnumerable<Candidate>> GetAllAsync();
+        Task<Candidate?> GetByIdAsync(int id);
+        Task AddAsync(Candidate candidate);
+        Task UpdateAsync(Candidate candidate);
+        Task DeleteAsync(int id);
     }
 }

@@ -1,19 +1,48 @@
-﻿using ISMIEEmploymentApp.Models;
+﻿using ISMIEEmploymentApp.Data;
+using ISMIEEmploymentApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ISMIEEmploymentApp.Repository
 {
     public class CandidateApplicationRepository : ICandidateApplicationRepository
     {
-        private readonly List<Candidate> _application = new();
+        private readonly ApplicationDbContext _ctx;
 
-        public void Add(Candidate application)
+        public CandidateApplicationRepository(ApplicationDbContext ctx)
         {
-            _application.Add(application);
+            _ctx = ctx;
+        }        
+
+        public async Task AddAsync(Candidate candidate)
+        {
+            await _ctx.Candidates.AddAsync(candidate);
+            await _ctx.SaveChangesAsync();
         }
 
-        public IEnumerable<Candidate> GetAll()
+        public async Task DeleteAsync(int id)
         {
-            return _application;
+            var candidate = await _ctx.Candidates.FindAsync(id);
+            if (candidate != null)
+            {
+                _ctx.Candidates.Remove(candidate);
+                await _ctx.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Candidate>> GetAllAsync()
+        {
+            return await _ctx.Candidates.ToListAsync();
+        }
+
+        public async Task<Candidate?> GetByIdAsync(int id)
+        {
+            return await _ctx.Candidates.FindAsync(id);
+        }
+
+        public async Task UpdateAsync(Candidate candidate)
+        {
+            _ctx.Candidates.Update(candidate);
+            await _ctx.SaveChangesAsync();
         }
     }
 }

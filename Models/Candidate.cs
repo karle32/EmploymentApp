@@ -1,18 +1,42 @@
-﻿namespace ISMIEEmploymentApp.Models
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace ISMIEEmploymentApp.Models
 {
     public class Candidate
     {
+        [Key] // Primary Key
+        public int Id { get; set; }
+
+        [Required]
         public DateTime Date { get; set; }
 
+        [Required, MaxLength(100)]
         public string FirstName { get; set; } = string.Empty;
+
+        [Required, MaxLength(100)]
         public string LastName { get; set; } = string.Empty;
+
         public string AltName { get; set; } = string.Empty;
+
+        [Required, MaxLength(255)]
         public string Address { get; set; } = string.Empty;
+
+        [Required, MaxLength(100)]
         public string City { get; set; } = string.Empty;
+
+        [Required, MaxLength(100)]
         public string StateProvince { get; set; } = string.Empty;
+
+        [Required, MaxLength(20)]
         public string ZipPostalCode { get; set; } = string.Empty;
+
+        [Required, MaxLength(100)]
         public string Country { get; set; } = string.Empty;
+
+        [Required, MaxLength(20)]
         public string Phone { get; set; } = string.Empty;
+
         public int LivedAtAddress { get; set; }
 
         public string? Address2 { get; set; }
