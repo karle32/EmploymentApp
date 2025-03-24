@@ -24,8 +24,8 @@ namespace ISMIEEmploymentApp.Services
             {
                 var message = new EmailMessage
                 {
-                    From = "info@fixmeadish.com",
-                    To = { "karletherly@live.com" }, // Update with recipient
+                    From = "insert Resend registered email", // The email has to match the registered email in REsend
+                    To = { "Add the person receiving the email here" }, // Add the person that would process the applications 
                     Subject = "New Employment Application Submission",
                     HtmlBody = GenerateEmailBody(application),
                     Attachments = new List<EmailAttachment>
